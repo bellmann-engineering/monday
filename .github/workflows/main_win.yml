@@ -1,0 +1,34 @@
+name: CI/CD with GCC for Windows
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install GCC and Mingw
+      run: |
+        sudo apt-get install -y g++
+        sudo apt-get install -y mingw-w64
+
+    - name: Build
+      run: mingw-g++ main.cpp -o my_program.exe
+
+    - name: Test
+      run: ./my_program.exe
+      
+    - name: Archive Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: my_program
+        path: ./my_program.exe
